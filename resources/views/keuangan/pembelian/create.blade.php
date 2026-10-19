@@ -10,12 +10,32 @@
       <div class="card-body">
         <div class="d-flex align-items-center justify-content-between mb-4">
           <h5 class="card-title fw-semibold mb-0">Form Pembelian</h5>
-          <a class="btn btn-outline-primary btn-sm" href="{{ route('pembelian.index') }}">View Pembelian</a>
+          <div class="d-flex gap-2">
+            <a class="btn btn-outline-primary btn-sm" href="{{ route('produk.index') }}">Kelola Barang</a>
+            <a class="btn btn-outline-secondary btn-sm" href="{{ route('pembelian.index') }}">View Pembelian</a>
+          </div>
         </div>
           <form method="POST" action="{{ route('pembelian.store') }}">
             @csrf
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label class="form-label" for="pemilik_kode">ID Pemilik <span class="text-danger" aria-hidden="true">*</span><span class="visually-hidden"> wajib diisi</span></label>
+                <input class="form-control" type="text" id="pemilik_kode" name="pemilik_kode" value="{{ old('pemilik_kode') }}" inputmode="numeric" maxlength="10" list="daftar-id-pemilik" autocomplete="off" required>
+                <datalist id="daftar-id-pemilik">
+                  @foreach ($pemiliks as $pemilik)
+                    <option value="{{ $pemilik->kode }}">{{ $pemilik->nama }}</option>
+                  @endforeach
+                </datalist>
+                @error('pemilik_kode')<div class="text-danger fs-3 mt-1">{{ $message }}</div>@enderror
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="pemilik_nama">Nama Pemilik</label>
+                <input class="form-control" type="text" id="pemilik_nama" value="{{ $pemiliks->firstWhere('kode', old('pemilik_kode'))?->nama ?? '' }}" placeholder="Nama muncul otomatis setelah ID dimasukkan" readonly>
+                <small class="text-muted" id="nama-pemilik">Masukkan ID dari Master ID Nama.</small>
+              </div>
+            </div>
             <div class="mb-3">
-              <label class="form-label" for="nama_barang">Nama Barang</label>
+              <label class="form-label" for="nama_barang">Nama Barang <span class="text-danger" aria-hidden="true">*</span><span class="visually-hidden"> wajib diisi</span></label>
               <input class="form-control" type="text" id="nama_barang" name="nama_barang" value="{{ old('nama_barang') }}" maxlength="150" required>
               @error('nama_barang')<div class="text-danger fs-3 mt-1">{{ $message }}</div>@enderror
             </div>
@@ -25,23 +45,23 @@
                 <input class="form-control" id="nomor" value="{{ $nomorBerikutnya }}" readonly>
               </div>
               <div class="col-6 col-md-2">
-                <label class="form-label" for="tanggal">Tgl</label>
+                <label class="form-label" for="tanggal">Tgl <span class="text-danger" aria-hidden="true">*</span><span class="visually-hidden"> wajib diisi</span></label>
                 <input class="form-control" type="date" id="tanggal" name="tanggal" value="{{ old('tanggal', now()->toDateString()) }}" required>
                 @error('tanggal')<div class="text-danger fs-3 mt-1">{{ $message }}</div>@enderror
               </div>
               <div class="col-4 col-md-2">
-                <label class="form-label" for="satuan">Unit</label>
+                <label class="form-label" for="satuan">Unit <span class="text-danger" aria-hidden="true">*</span><span class="visually-hidden"> wajib diisi</span></label>
                 <input class="form-control" type="text" id="satuan" name="satuan" value="{{ old('satuan') }}" placeholder="per pcs / per botol" maxlength="30" required>
                 @error('satuan')<div class="text-danger fs-3 mt-1">{{ $message }}</div>@enderror
               </div>
               <div class="col-8 col-md-3">
-                <label class="form-label" for="harga_beli">Harga beli (HB)</label>
+                <label class="form-label" for="harga_beli">Harga beli (HB) <span class="text-danger" aria-hidden="true">*</span><span class="visually-hidden"> wajib diisi</span></label>
                 <div class="input-group"><span class="input-group-text">Rp</span><input class="form-control" type="text" id="harga_beli_display" value="{{ old('harga_beli') ? number_format((float) old('harga_beli'), 2, ',', '.') : '' }}" inputmode="decimal" autocomplete="off" required><input type="hidden" id="harga_beli" name="harga_beli" value="{{ old('harga_beli') }}"></div>
                 <small class="text-muted">Per unit</small>
                 @error('harga_beli')<div class="text-danger fs-3 mt-1">{{ $message }}</div>@enderror
               </div>
               <div class="col-4 col-md-3">
-                <label class="form-label" for="jumlah">Jumlah</label>
+                <label class="form-label" for="jumlah">Jumlah <span class="text-danger" aria-hidden="true">*</span><span class="visually-hidden"> wajib diisi</span></label>
                 <input class="form-control" type="number" id="jumlah" name="jumlah" value="{{ old('jumlah') }}" min="0.001" max="999999.999" step="0.001" required>
                 @error('jumlah')<div class="text-danger fs-3 mt-1">{{ $message }}</div>@enderror
               </div>
@@ -61,6 +81,10 @@
 @push('scripts')
 <script>
   (() => {
+    const ownerInput = document.getElementById('pemilik_kode');
+    const ownerName = document.getElementById('nama-pemilik');
+    const ownerNameField = document.getElementById('pemilik_nama');
+    const ownerNames = @json($pemiliks->pluck('nama', 'kode'));
     const quantityInput = document.getElementById('jumlah');
     const priceInput = document.getElementById('harga_beli');
     const priceDisplay = document.getElementById('harga_beli_display');
@@ -92,6 +116,20 @@
         : '0,00';
     };
 
+    const updateOwnerName = () => {
+      const code = ownerInput.value.trim().padStart(3, '0');
+      ownerNameField.value = ownerNames[code] || '';
+      ownerName.textContent = ownerNames[code] ? 'Nama pemilik terisi otomatis dan tidak dapat diedit.' : (ownerInput.value ? 'ID tidak ditemukan. Tambahkan nama di Master ID Nama.' : 'Masukkan ID dari Master ID Nama.');
+    };
+
+    ownerInput.addEventListener('input', updateOwnerName);
+    ownerInput.addEventListener('blur', () => {
+      if (ownerInput.value.trim()) {
+        ownerInput.value = ownerInput.value.trim().padStart(3, '0');
+      }
+      updateOwnerName();
+    });
+
     priceDisplay.addEventListener('input', () => {
       const start = priceDisplay.selectionStart;
       const oldValue = priceDisplay.value;
@@ -103,6 +141,7 @@
     });
 
     quantityInput.addEventListener('input', updateTotal);
+    updateOwnerName();
     updateTotal();
   })();
 </script>

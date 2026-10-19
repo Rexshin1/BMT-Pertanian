@@ -14,10 +14,10 @@
     <aside class="left-sidebar">
       <div>
         <div class="brand-logo d-flex align-items-center justify-content-between">
-          <a href="{{ route('dashboard') }}" class="bmt-brand text-nowrap">
+          <div class="bmt-brand text-nowrap">
             <img src="{{ asset('assets/images/logos/bmt-cinde-barokah.png') }}" alt="Logo BMT Cinde Barokah">
             <span class="bmt-brand-name"><strong>BMT CINDE BAROKAH</strong><small>Koperasi Konsumen Cinde Barokah Sejahtera</small></span>
-          </a>
+          </div>
           <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse"><i class="ti ti-x fs-8"></i></div>
         </div>
         <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
@@ -46,25 +46,33 @@
             </li>
             <li class="nav-small-cap"><i class="ti ti-dots nav-small-cap-icon fs-4"></i><span class="hide-menu">MASTER DATA</span></li>
             <li class="sidebar-item">
+              <a class="sidebar-link {{ request()->routeIs('pemilik.*') ? 'active' : '' }}" href="{{ route('pemilik.index') }}">
+                <span><i class="ti ti-id"></i></span><span class="hide-menu">Master ID Nama</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
               <a class="sidebar-link {{ request()->routeIs('penjualan.create') ? 'active' : '' }}" href="{{ route('penjualan.create') }}">
-                <span><i class="ti ti-plus"></i></span><span class="hide-menu">Create Penjualan</span>
+                <span><i class="ti ti-shopping-cart-plus"></i></span><span class="hide-menu">Create Penjualan</span>
               </a>
             </li>
             <li class="sidebar-item">
               <a class="sidebar-link {{ request()->routeIs('pembelian.create') ? 'active' : '' }}" href="{{ route('pembelian.create') }}">
-                <span><i class="ti ti-plus"></i></span><span class="hide-menu">Create Pembelian</span>
+                <span><i class="ti ti-receipt"></i></span><span class="hide-menu">Create Pembelian</span>
               </a>
             </li>
-            <li class="nav-small-cap"><i class="ti ti-dots nav-small-cap-icon fs-4"></i><span class="hide-menu">AUTH</span></li>
+            <li class="nav-small-cap"><i class="ti ti-dots nav-small-cap-icon fs-4"></i><span class="hide-menu">ACCOUNT</span></li>
             <li class="sidebar-item">
-              <a class="sidebar-link {{ request()->routeIs('login') ? 'active' : '' }}" href="{{ route('login') }}">
-                <span><i class="ti ti-login"></i></span><span class="hide-menu">Login</span>
+              <a class="sidebar-link {{ request()->routeIs('account.*') ? 'active' : '' }}" href="{{ route('account.edit') }}">
+                <span><i class="ti ti-user"></i></span><span class="hide-menu">Edit Account</span>
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link {{ request()->routeIs('register') ? 'active' : '' }}" href="{{ route('register') }}">
-                <span><i class="ti ti-user-plus"></i></span><span class="hide-menu">Register</span>
-              </a>
+              <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button class="sidebar-link border-0 bg-transparent w-100 text-start" type="submit">
+                  <span><i class="ti ti-logout"></i></span><span class="hide-menu">Logout</span>
+                </button>
+              </form>
             </li>
           </ul>
         </nav>
@@ -80,7 +88,7 @@
           </ul>
           <div class="navbar-collapse justify-content-end px-0">
             <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-              <li class="nav-item"><span class="nav-link">BMT Cinde Barokah</span></li>
+              <li class="nav-item"><span class="nav-link">{{ auth()->user()->name }}</span></li>
               <li class="nav-item">
                 <img src="{{ asset('assets/images/profile/user-1.jpg') }}" alt="Profil" width="35" height="35" class="rounded-circle">
               </li>
@@ -88,7 +96,7 @@
           </div>
         </nav>
       </header>
-      <div class="container-fluid">
+      <div class="container-fluid app-content-with-footer">
         <div class="d-flex align-items-center justify-content-between mb-4">
           <h4 class="fw-semibold mb-0">@yield('page-title')</h4>
         </div>
@@ -109,6 +117,7 @@
           </div>
         @endif
         @yield('content')
+        @include('partials.footer')
       </div>
     </div>
   </div>

@@ -133,3 +133,133 @@
   color: #64756a;
   font-size: 11px;
 }
+
+.bmt-login-page {
+  padding: 24px;
+  background:
+    linear-gradient(135deg, rgb(10 42 26 / 58%), rgb(13 31 23 / 38%)),
+    url("../images/backgrounds/bmt-store-login.jpeg") center / cover no-repeat;
+}
+
+.bmt-login-card {
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 65%);
+  border-radius: 18px;
+  background: rgb(255 255 255 / 96%);
+  box-shadow: 0 24px 70px rgb(0 0 0 / 28%);
+}
+
+.app-fixed-footer {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 270px;
+  z-index: 10;
+  background: rgb(255 255 255 / 96%);
+  box-shadow: 0 -4px 16px rgb(31 48 41 / 8%);
+}
+
+.app-content-with-footer {
+  padding-bottom: 64px !important;
+}
+
+.bmt-login-footer {
+  left: 0;
+  color: #fff;
+  background: rgb(13 31 23 / 48%);
+  box-shadow: none;
+}
+
+@media (max-width: 1199.98px) {
+  .app-fixed-footer {
+    left: 0;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .app-content-with-footer {
+    min-width: 0;
+    padding: 12px 12px 72px !important;
+  }
+
+  .app-content-with-footer > .d-flex {
+    align-items: flex-start !important;
+  }
+
+  .app-content-with-footer .card,
+  .app-content-with-footer .card-body,
+  .app-content-with-footer .dt-container {
+    min-width: 0;
+  }
+
+  .app-content-with-footer .card-body {
+    padding: 16px !important;
+  }
+
+  .app-content-with-footer .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .app-content-with-footer .dt-container .dt-layout-row {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+
+  .app-content-with-footer .dt-container .dt-layout-cell {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .app-content-with-footer .dt-container .dt-layout-cell.dt-layout-end {
+    text-align: left;
+  }
+
+  .app-content-with-footer .dt-container .dt-search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .app-content-with-footer .dt-container .dt-search input {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin-left: 0;
+  }
+
+  .app-content-with-footer .dt-container .dt-buttons {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .app-content-with-footer .dt-container .dt-buttons .dt-button {
+    flex: 1 1 auto;
+    margin: 0;
+  }
+
+  .app-content-with-footer [data-date-filter-reset] {
+    width: 100%;
+  }
+
+  .app-fixed-footer {
+    padding: 6px 8px !important;
+  }
+
+  .app-fixed-footer p {
+    font-size: 10px !important;
+  }
+
+  .bmt-login-page {
+    padding: 12px;
+  }
+
+  .bmt-login-card .card-body {
+    padding: 20px !important;
+  }
+
+  .bmt-auth-brand img {
+    width: 72px;
+    height: 72px;
+  }
+}

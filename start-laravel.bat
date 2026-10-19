@@ -11,7 +11,9 @@ if not exist "%PHP_EXE%" (
 )
 
 cd /d "%~dp0"
-"%PHP_EXE%" artisan serve --host=127.0.0.1 --port=8108
+echo Local: http://127.0.0.1:8108
+echo Mobile: http://IP-LAPTOP:8108 (laptop and phone must use the same Wi-Fi)
+"%PHP_EXE%" artisan serve --host=0.0.0.0 --port=8108 --no-reload
 
 if errorlevel 1 (
     echo.

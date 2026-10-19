@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pembelian;
+use App\Models\Pemilik;
 use App\Models\Produk;
 use App\Support\FinancialAmount;
 use Illuminate\Http\RedirectResponse;
@@ -14,13 +15,29 @@ class PembelianController extends Controller
 {
     public function index(Request $request): View
     {
-        $query = Pembelian::query()->with('produk');
+        $filters = $request->validate([
+            'tanggal_mulai' => ['nullable', 'date_format:Y-m-d'],
+            'tanggal_selesai' => ['nullable', 'date_format:Y-m-d', 'after_or_equal:tanggal_mulai'],
+            'pemilik' => ['nullable', 'string', 'exists:pemiliks,kode'],
+        ]);
+        $query = Pembelian::query()->with('produk.pemilik');
+
+        if (! empty($filters['pemilik'])) {
+            $query->whereHas('produk.pemilik', fn ($ownerQuery) => $ownerQuery->where('kode', $filters['pemilik']));
+        }
 
         return view('keuangan.pembelian.master-data', [
             'pembelians' => $query
                 ->latest('tanggal')
                 ->latest('id')
                 ->get(),
+            'pemiliks' => Pemilik::query()->orderByRaw('CAST(kode AS DECIMAL(20, 0))')->get(),
+            'pemilikTerpilih' => $filters['pemilik'] ?? '',
+            'tanggalMulai' => $filters['tanggal_mulai'] ?? '',
+            'tanggalSelesai' => $filters['tanggal_selesai'] ?? '',
+            'pemilikTerpilihNama' => ! empty($filters['pemilik'])
+                ? Pemilik::query()->where('kode', $filters['pemilik'])->value('nama')
+                : null,
         ]);
     }
 
@@ -28,12 +45,14 @@ class PembelianController extends Controller
     {
         return view('keuangan.pembelian.create', [
             'nomorBerikutnya' => Pembelian::query()->count() + 1,
+            'pemiliks' => Pemilik::query()->orderByRaw('CAST(kode AS DECIMAL(20, 0))')->get(),
         ]);
     }
 
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
+            'pemilik_kode' => ['required', 'string', 'regex:/^\d{3,10}$/', 'exists:pemiliks,kode'],
             'nama_barang' => ['required', 'string', 'max:150'],
             'tanggal' => ['required', 'date_format:Y-m-d'],
             'satuan' => ['required', 'string', 'max:30'],
@@ -44,7 +63,12 @@ class PembelianController extends Controller
         DB::transaction(function () use ($data): void {
             $namaBarang = trim($data['nama_barang']);
             $satuan = trim($data['satuan']);
+            $pemilik = Pemilik::query()
+                ->where('kode', $data['pemilik_kode'])
+                ->lockForUpdate()
+                ->firstOrFail();
             $produk = Produk::query()
+                ->where('pemilik_id', $pemilik->id)
                 ->whereRaw('LOWER(nama) = ?', [mb_strtolower($namaBarang)])
                 ->lockForUpdate()
                 ->first();
@@ -52,6 +76,7 @@ class PembelianController extends Controller
             if (! $produk) {
                 $produk = new Produk([
                     'nama' => $namaBarang,
+                    'pemilik_id' => $pemilik->id,
                     'satuan' => $satuan,
                 ]);
                 $produk->save();

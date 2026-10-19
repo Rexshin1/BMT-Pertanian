@@ -1,65 +1,49 @@
 <!doctype html>
-<html lang="id">
-
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Login - BMT Cinde Barokah</title>
-  <link rel="shortcut icon" type="image/png" href="{{ asset('assets/images/logos/bmt-cinde-barokah.png') }}" />
-  <link rel="stylesheet" href="{{ asset('assets/css/styles.min.css') }}" />
-  <link rel="stylesheet" href="{{ asset('assets/css/bmt-theme.css') }}" />
+  <link rel="shortcut icon" type="image/png" href="{{ asset('assets/images/logos/bmt-cinde-barokah.png') }}">
+  <link rel="stylesheet" href="{{ asset('assets/css/styles.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/css/bmt-theme.css') }}">
 </head>
-
 <body>
-  <!--  Body Wrapper -->
-  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
-    data-sidebar-position="fixed" data-header-position="fixed">
-    <div
-      class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
-      <div class="d-flex align-items-center justify-content-center w-100">
+  <div class="page-wrapper bmt-login-page min-vh-100 d-flex align-items-center justify-content-center" id="main-wrapper">
         <div class="row justify-content-center w-100">
-          <div class="col-md-8 col-lg-6 col-xxl-3">
-            <div class="card mb-0">
+          <div class="col-sm-10 col-md-7 col-lg-5 col-xxl-3">
+            <div class="card bmt-login-card mb-0">
               <div class="card-body">
-                <a href="{{ route('dashboard') }}" class="bmt-auth-brand text-center d-block py-3 w-100">
-                  <img src="{{ asset('assets/images/logos/bmt-cinde-barokah.png') }}" alt="Logo BMT Cinde Barokah">
+                <div class="bmt-auth-brand text-center py-3 w-100">
+                  <img src="{{ asset('assets/images/logos/bmt-cinde-barokah.png') }}" alt="BMT Cinde Barokah logo">
                   <strong>BMT CINDE BAROKAH</strong>
                   <small>Koperasi Konsumen Cinde Barokah Sejahtera</small>
-                </a>
-                <p class="text-center">Sistem Penjualan</p>
-                <form>
+                </div>
+                <h4 class="text-center mb-4">Sign in to your account</h4>
+                @if ($errors->any())
+                  <div class="alert alert-danger" role="alert">{{ $errors->first() }}</div>
+                @endif
+                <form method="POST" action="{{ route('login.store') }}">
+                  @csrf
                   <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label">Username</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" autocomplete="username" required autofocus>
                   </div>
-                  <div class="mb-4">
-                    <label for="exampleInputPassword1" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1">
+                  <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" autocomplete="current-password" required>
                   </div>
-                  <div class="d-flex align-items-center justify-content-between mb-4">
-                    <div class="form-check">
-                      <input class="form-check-input primary" type="checkbox" value="" id="flexCheckChecked" checked>
-                      <label class="form-check-label text-dark" for="flexCheckChecked">
-                        Remeber this Device
-                      </label>
-                    </div>
-                    <a class="text-primary fw-bold" href="{{ route('dashboard') }}">Forgot Password ?</a>
+                  <div class="form-check mb-4">
+                    <input class="form-check-input" type="checkbox" name="remember" value="1" id="remember">
+                    <label class="form-check-label" for="remember">Remember me</label>
                   </div>
-                  <a href="{{ route('dashboard') }}" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Sign In</a>
-                  <div class="d-flex align-items-center justify-content-center">
-                    <p class="fs-4 mb-0 fw-bold">Belum punya akun?</p>
-                    <a class="text-primary fw-bold ms-2" href="{{ route('register') }}">Create an account</a>
-                  </div>
+                  <button type="submit" class="btn btn-primary w-100 py-2 mb-3">Login</button>
                 </form>
               </div>
+              @include('partials.footer', ['footerClass' => 'bmt-login-footer'])
             </div>
           </div>
         </div>
-      </div>
-    </div>
   </div>
-  <script src="{{ asset('assets/libs/jquery/dist/jquery.min.js') }}"></script>
-  <script src="{{ asset('assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
 </body>
-
 </html>

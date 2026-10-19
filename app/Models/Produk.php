@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Produk extends Model
@@ -12,6 +13,7 @@ class Produk extends Model
 
     protected $fillable = [
         'nama',
+        'pemilik_id',
         'satuan',
         'harga_jual',
     ];
@@ -30,5 +32,10 @@ class Produk extends Model
     public function penjuwalans(): HasMany
     {
         return $this->hasMany(Penjualan::class);
+    }
+
+    public function pemilik(): BelongsTo
+    {
+        return $this->belongsTo(Pemilik::class);
     }
 }

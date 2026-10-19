@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Pembelian;
 use App\Models\Penjualan;
-use App\Models\Produk;
-use Illuminate\Support\Carbon;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
@@ -16,19 +14,15 @@ class DashboardController extends Controller
         $monthStart = $today->copy()->startOfMonth();
         $yearStart = $today->copy()->startOfYear();
 
-        $dailySales = Penjualan::query()
-            ->whereBetween('tanggal', [$monthStart->toDateString(), $today->toDateString()])
-            ->selectRaw('tanggal, SUM(total_harga_jual) AS total')
+        $salesByDate = Penjualan::query()
+            ->whereBetween('tanggal', [$yearStart->toDateString(), $today->toDateString()])
+            ->selectRaw('tanggal, SUM(total_harga_jual) AS total_sales, SUM(total_harga_beli) AS total_cost, SUM(laba) AS total_profit')
             ->groupBy('tanggal')
-            ->pluck('total', 'tanggal');
+            ->get()
+            ->keyBy(fn (Penjualan $transaction) => $transaction->tanggal->toDateString());
         $dailyPurchases = Pembelian::query()
             ->whereBetween('tanggal', [$monthStart->toDateString(), $today->toDateString()])
             ->selectRaw('tanggal, SUM(total_harga) AS total')
-            ->groupBy('tanggal')
-            ->pluck('total', 'tanggal');
-        $dailyProfit = Penjualan::query()
-            ->whereBetween('tanggal', [$monthStart->toDateString(), $today->toDateString()])
-            ->selectRaw('tanggal, SUM(laba) AS total')
             ->groupBy('tanggal')
             ->pluck('total', 'tanggal');
 
@@ -40,20 +34,14 @@ class DashboardController extends Controller
         for ($date = $monthStart->copy(); $date->lte($today); $date->addDay()) {
             $key = $date->toDateString();
             $chartDates->push($date->format('d/m'));
-            $chartSales[] = (float) ($dailySales[$key] ?? 0);
+            $chartSales[] = (float) ($salesByDate[$key]->total_sales ?? 0);
             $chartPurchases[] = (float) ($dailyPurchases[$key] ?? 0);
-            $chartProfit[] = (float) ($dailyProfit[$key] ?? 0);
+            $chartProfit[] = (float) ($salesByDate[$key]->total_profit ?? 0);
         }
 
-        $yearSales = (float) Penjualan::query()
-            ->whereBetween('tanggal', [$yearStart->toDateString(), $today->toDateString()])
-            ->sum('total_harga_jual');
-        $yearCost = (float) Penjualan::query()
-            ->whereBetween('tanggal', [$yearStart->toDateString(), $today->toDateString()])
-            ->sum('total_harga_beli');
-        $yearProfit = (float) Penjualan::query()
-            ->whereBetween('tanggal', [$yearStart->toDateString(), $today->toDateString()])
-            ->sum('laba');
+        $yearSales = (float) $salesByDate->sum('total_sales');
+        $yearCost = (float) $salesByDate->sum('total_cost');
+        $yearProfit = (float) $salesByDate->sum('total_profit');
 
         $sales = Penjualan::query()
             ->with('produk')
@@ -106,13 +94,6 @@ class DashboardController extends Controller
                 ->sortByDesc(fn (array $transaction) => $transaction['created_at']?->timestamp ?? 0)
                 ->take(8)
                 ->values(),
-            'lowStockProducts' => Produk::query()
-                ->orderBy('stok')
-                ->orderBy('nama')
-                ->limit(6)
-                ->get(),
-            'productCount' => Produk::query()->count(),
-            'totalStock' => (float) Produk::query()->sum('stok'),
         ]);
     }
 }

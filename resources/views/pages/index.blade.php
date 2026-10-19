@@ -19,10 +19,10 @@
       <!-- Sidebar scroll-->
       <div>
         <div class="brand-logo d-flex align-items-center justify-content-between">
-          <a href="{{ route('dashboard') }}" class="bmt-brand text-nowrap">
+          <div class="bmt-brand text-nowrap">
             <img src="{{ asset('assets/images/logos/bmt-cinde-barokah.png') }}" alt="Logo BMT Cinde Barokah" />
             <span class="bmt-brand-name"><strong>BMT CINDE BAROKAH</strong><small>Koperasi Konsumen Cinde Barokah Sejahtera</small></span>
-          </a>
+          </div>
           <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
             <i class="ti ti-x fs-8"></i>
           </div>
@@ -69,36 +69,43 @@
               <span class="hide-menu">MASTER DATA</span>
             </li>
             <li class="sidebar-item">
+              <a class="sidebar-link" href="{{ route('pemilik.index') }}">
+                <span><i class="ti ti-id"></i></span>
+                <span class="hide-menu">Master ID Nama</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
               <a class="sidebar-link" href="{{ route('penjualan.create') }}">
-                <span><i class="ti ti-plus"></i></span>
+                <span><i class="ti ti-shopping-cart-plus"></i></span>
                 <span class="hide-menu">Create Penjualan</span>
               </a>
             </li>
             <li class="sidebar-item">
               <a class="sidebar-link" href="{{ route('pembelian.create') }}">
-                <span><i class="ti ti-plus"></i></span>
+                <span><i class="ti ti-receipt"></i></span>
                 <span class="hide-menu">Create Pembelian</span>
               </a>
             </li>
             <li class="nav-small-cap">
               <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-              <span class="hide-menu">AUTH</span>
+              <span class="hide-menu">ACCOUNT</span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="{{ route('login') }}" aria-expanded="false">
+              <a class="sidebar-link" href="{{ route('account.edit') }}" aria-expanded="false">
                 <span>
-                  <i class="ti ti-login"></i>
+                  <i class="ti ti-user"></i>
                 </span>
-                <span class="hide-menu">Login</span>
+                <span class="hide-menu">Edit Account</span>
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="{{ route('register') }}" aria-expanded="false">
-                <span>
-                  <i class="ti ti-user-plus"></i>
-                </span>
-                <span class="hide-menu">Register</span>
-              </a>
+              <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button class="sidebar-link border-0 bg-transparent w-100 text-start" type="submit">
+                  <span><i class="ti ti-logout"></i></span>
+                  <span class="hide-menu">Logout</span>
+                </button>
+              </form>
             </li>
           </ul>
         </nav>
@@ -149,7 +156,10 @@
                       <i class="ti ti-list-check fs-6"></i>
                       <p class="mb-0 fs-3">My Task</p>
                     </a>
-                    <a href="{{ route('login') }}" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                    <form method="POST" action="{{ route('logout') }}">
+                      @csrf
+                      <button type="submit" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</button>
+                    </form>
                   </div>
                 </div>
               </li>
@@ -158,7 +168,7 @@
         </nav>
       </header>
       <!--  Header End -->
-      <div class="container-fluid">
+      <div class="container-fluid app-content-with-footer">
         <!--  Row 1 -->
         <div class="row">
           <div class="col-lg-8 d-flex align-items-strech">
@@ -282,7 +292,7 @@
                           <td class="border-bottom-0"><h6 class="fw-semibold mb-0">{{ $transaction['id'] }}</h6></td>
                           <td class="border-bottom-0">{{ $transaction['date']->format('d/m/Y') }}</td>
                           <td class="border-bottom-0"><h6 class="fw-semibold mb-0">{{ $transaction['name'] }}</h6><span class="text-muted">{{ $transaction['unit'] }}</span></td>
-                          <td class="border-bottom-0"><span class="badge {{ $transaction['type'] === 'Penjualan' ? 'bg-primary' : 'bg-danger' }} rounded-3 fw-semibold">{{ $transaction['type'] }}</span></td>
+                          <td class="border-bottom-0"><span class="badge {{ $transaction['type'] === 'Penjualan' ? 'bg-primary' : 'bg-danger' }} rounded-0 fw-semibold">{{ $transaction['type'] }}</span></td>
                           <td class="border-bottom-0 text-end">{{ rtrim(rtrim(number_format($transaction['quantity'], 3, ',', '.'), '0'), ',') }}</td>
                           <td class="border-bottom-0 text-end"><h6 class="fw-semibold mb-0 fs-4">Rp {{ number_format($transaction['amount'], 0, ',', '.') }}</h6></td>
                         </tr>
@@ -296,44 +306,7 @@
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-body p-4">
-                <div class="d-flex align-items-center justify-content-between mb-4">
-                  <div>
-                    <h5 class="card-title fw-semibold mb-1">Ringkasan Stok Barang</h5>
-                    <span class="text-muted fs-3">{{ $productCount }} barang · Total stok {{ rtrim(rtrim(number_format($totalStock, 3, ',', '.'), '0'), ',') }}</span>
-                  </div>
-                  <a href="{{ route('produk.index') }}" class="btn btn-outline-primary btn-sm">Lihat Barang</a>
-                </div>
-                <div class="table-responsive">
-                  <table class="table text-nowrap mb-0 align-middle">
-                    <thead class="text-dark fs-4">
-                      <tr><th>Nama Barang</th><th>Unit</th><th class="text-end">Stok</th><th class="text-end">HB</th><th class="text-end">HJ</th></tr>
-                    </thead>
-                    <tbody>
-                      @forelse ($lowStockProducts as $product)
-                        <tr>
-                          <td><h6 class="fw-semibold mb-0">{{ $product->nama }}</h6></td>
-                          <td>{{ $product->satuan }}</td>
-                          <td class="text-end">{{ rtrim(rtrim(number_format((float) $product->stok, 3, ',', '.'), '0'), ',') }}</td>
-                          <td class="text-end">Rp {{ number_format((float) $product->harga_beli, 0, ',', '.') }}</td>
-                          <td class="text-end">Rp {{ number_format((float) $product->harga_jual, 0, ',', '.') }}</td>
-                        </tr>
-                      @empty
-                        <tr><td colspan="5" class="text-center text-muted py-4">Belum ada barang.</td></tr>
-                      @endforelse
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="py-6 px-6 text-center">
-          <p class="mb-0 fs-4">Design and Developed by <a href="https://adminmart.com/" target="_blank" class="pe-1 text-primary text-decoration-underline">AdminMart.com</a> Distributed by <a href="https://themewagon.com">ThemeWagon</a></p>
-        </div>
+        @include('partials.footer')
       </div>
     </div>
   </div>
