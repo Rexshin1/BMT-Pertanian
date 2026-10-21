@@ -44,9 +44,13 @@ class PenjualanController extends Controller
 
     public function create(): View
     {
+        $pemiliks = Pemilik::query()->orderByRaw('CAST(kode AS DECIMAL(20, 0))')->get();
+        $lastKode = session('last_pemilik_kode');
+
         return view('keuangan.penjualan.create', [
             'nomorBerikutnya' => Penjualan::query()->count() + 1,
-            'pemiliks' => Pemilik::query()->orderByRaw('CAST(kode AS DECIMAL(20, 0))')->get(),
+            'pemiliks' => $pemiliks,
+            'lastPemilikKode' => $pemiliks->contains('kode', $lastKode) ? $lastKode : null,
             'produks' => Produk::query()
                 ->where('stok', '>', 0)
                 ->with('pemilik')
@@ -113,6 +117,8 @@ class PenjualanController extends Controller
             $produk->harga_jual = $hargaJual;
             $produk->save();
         });
+
+        session(['last_pemilik_kode' => $data['pemilik_kode']]);
 
         return redirect()->route('penjualan.create')->with('success', 'Penjualan dicatat dan stok barang berkurang.');
     }

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Login - BMT Cinde Barokah</title>
+  <title>Login - Koperasi Konsumen Cinde Barokah Sejahtera</title>
   <link rel="shortcut icon" type="image/png" href="{{ asset('assets/images/logos/bmt-cinde-barokah.png') }}">
   <link rel="stylesheet" href="{{ asset('assets/css/styles.min.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/css/bmt-theme.css') }}">
@@ -15,9 +15,9 @@
             <div class="card bmt-login-card mb-0">
               <div class="card-body">
                 <div class="bmt-auth-brand text-center py-3 w-100">
-                  <img src="{{ asset('assets/images/logos/bmt-cinde-barokah.png') }}" alt="BMT Cinde Barokah logo">
-                  <strong>BMT CINDE BAROKAH</strong>
-                  <small>Koperasi Konsumen Cinde Barokah Sejahtera</small>
+                  <img src="{{ asset('assets/images/logos/bmt-cinde-barokah.png') }}" alt="Logo Koperasi Konsumen Cinde Barokah Sejahtera">
+                  <strong>KOPERASI KONSUMEN</strong>
+                  <small>Cinde Barokah Sejahtera</small>
                 </div>
                 <h4 class="text-center mb-4">Sign in to your account</h4>
                 @if ($errors->any())

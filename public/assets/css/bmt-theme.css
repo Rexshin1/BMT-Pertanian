@@ -127,6 +127,15 @@
 
 .bmt-auth-brand strong {
   font-size: 16px;
+  line-height: 1.15;
+}
+
+.bmt-auth-brand small {
+  margin-top: 3px;
+  color: #64756a;
+  font-size: 11px;
+  line-height: 1.15;
+}
 }
 
 .bmt-auth-brand small {

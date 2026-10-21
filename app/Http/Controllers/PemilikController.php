@@ -26,6 +26,7 @@ class PemilikController extends Controller
     {
         $data = $request->validate([
             'nama' => ['required', 'string', 'max:150'],
+            'alamat' => ['nullable', 'string', 'max:255'],
         ]);
 
         $pemilik = DB::transaction(function () use ($data): Pemilik {
@@ -42,6 +43,7 @@ class PemilikController extends Controller
             return Pemilik::query()->create([
                 'kode' => str_pad((string) $kodeBerikutnya, 3, '0', STR_PAD_LEFT),
                 'nama' => trim($data['nama']),
+                'alamat' => ! empty($data['alamat']) ? trim($data['alamat']) : null,
             ]);
         });
 
@@ -58,9 +60,13 @@ class PemilikController extends Controller
     {
         $data = $request->validate([
             'nama' => ['required', 'string', 'max:150'],
+            'alamat' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $pemilik->update(['nama' => trim($data['nama'])]);
+        $pemilik->update([
+            'nama' => trim($data['nama']),
+            'alamat' => ! empty($data['alamat']) ? trim($data['alamat']) : null,
+        ]);
 
         return redirect()->route('pemilik.index')->with('success', 'Nama pemilik berhasil diperbarui.');
     }

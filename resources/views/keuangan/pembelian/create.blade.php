@@ -20,7 +20,7 @@
             <div class="row g-3 mb-3">
               <div class="col-md-6">
                 <label class="form-label" for="pemilik_kode">ID Pemilik <span class="text-danger" aria-hidden="true">*</span><span class="visually-hidden"> wajib diisi</span></label>
-                <input class="form-control" type="text" id="pemilik_kode" name="pemilik_kode" value="{{ old('pemilik_kode') }}" inputmode="numeric" maxlength="10" list="daftar-id-pemilik" autocomplete="off" required>
+                <input class="form-control" type="text" id="pemilik_kode" name="pemilik_kode" value="{{ old('pemilik_kode', $lastPemilikKode) }}" inputmode="numeric" maxlength="10" list="daftar-id-pemilik" autocomplete="off" required>
                 <datalist id="daftar-id-pemilik">
                   @foreach ($pemiliks as $pemilik)
                     <option value="{{ $pemilik->kode }}">{{ $pemilik->nama }}</option>
@@ -30,7 +30,7 @@
               </div>
               <div class="col-md-6">
                 <label class="form-label" for="pemilik_nama">Nama Pemilik</label>
-                <input class="form-control" type="text" id="pemilik_nama" value="{{ $pemiliks->firstWhere('kode', old('pemilik_kode'))?->nama ?? '' }}" placeholder="Nama muncul otomatis setelah ID dimasukkan" readonly>
+                <input class="form-control" type="text" id="pemilik_nama" value="{{ $pemiliks->firstWhere('kode', old('pemilik_kode', $lastPemilikKode))?->nama ?? '' }}" placeholder="Nama muncul otomatis setelah ID dimasukkan" readonly>
                 <small class="text-muted" id="nama-pemilik">Masukkan ID dari Master ID Nama.</small>
               </div>
             </div>

@@ -19,10 +19,15 @@
             <label class="form-label" for="kode">ID Pemilik</label>
             <input class="form-control" id="kode" value="{{ $pemilik->id_tampilan }}" readonly>
           </div>
-          <div class="mb-4">
+          <div class="mb-3">
             <label class="form-label" for="nama">Nama pemilik <span class="text-danger" aria-hidden="true">*</span><span class="visually-hidden"> wajib diisi</span></label>
             <input class="form-control" id="nama" name="nama" value="{{ old('nama', $pemilik->nama) }}" maxlength="150" required>
             @error('nama')<div class="text-danger fs-3 mt-1">{{ $message }}</div>@enderror
+          </div>
+          <div class="mb-4">
+            <label class="form-label" for="alamat">Alamat / Desa</label>
+            <textarea class="form-control" id="alamat" name="alamat" rows="2" maxlength="255" placeholder="Contoh: Dsn. Dawung Kec. Grabagan Kab. Tuban">{{ old('alamat', $pemilik->alamat) }}</textarea>
+            @error('alamat')<div class="text-danger fs-3 mt-1">{{ $message }}</div>@enderror
           </div>
           <button class="btn btn-primary w-100" type="submit">Simpan Perubahan</button>
         </form>

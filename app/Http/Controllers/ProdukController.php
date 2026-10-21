@@ -23,9 +23,13 @@ class ProdukController extends Controller
 
     public function create(): View
     {
+        $pemiliks = Pemilik::query()->orderByRaw('CAST(kode AS DECIMAL(20, 0))')->get();
+        $lastKode = session('last_pemilik_kode');
+
         return view('keuangan.produk.form', [
             'produk' => null,
-            'pemiliks' => Pemilik::query()->orderByRaw('CAST(kode AS DECIMAL(20, 0))')->get(),
+            'pemiliks' => $pemiliks,
+            'lastPemilikKode' => $pemiliks->contains('kode', $lastKode) ? $lastKode : null,
         ]);
     }
 
@@ -50,6 +54,8 @@ class ProdukController extends Controller
         $request->validate([
             'nama' => [Rule::unique('produks', 'nama')->where(fn ($query) => $query->where('pemilik_id', $pemilik->id))],
         ]);
+
+        session(['last_pemilik_kode' => $data['pemilik_kode']]);
 
         Produk::query()->create([
             'pemilik_id' => $pemilik->id,
@@ -79,6 +85,8 @@ class ProdukController extends Controller
                     ->ignore($produk->id),
             ],
         ]);
+
+        session(['last_pemilik_kode' => $data['pemilik_kode']]);
 
         $produk->update([
             'pemilik_id' => $pemilik->id,

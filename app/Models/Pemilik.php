@@ -10,6 +10,7 @@ class Pemilik extends Model
     protected $fillable = [
         'kode',
         'nama',
+        'alamat',
     ];
 
     public function produks(): HasMany

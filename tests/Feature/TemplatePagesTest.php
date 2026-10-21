@@ -17,8 +17,9 @@ class TemplatePagesTest extends TestCase
             ->assertSee('app-fixed-footer', false)
             ->assertSee('<div class="bmt-auth-brand text-center py-3 w-100">', false)
             ->assertDontSee('<a href="http://localhost/login" class="bmt-auth-brand', false)
-            ->assertSee('BMT Cinde Barokah © '.now()->year.' All Right Reserved.')
-            ->assertSee('BMT CINDE BAROKAH')
+            ->assertSee('Koperasi Konsumen Cinde Barokah Sejahtera © '.now()->year.' All Right Reserved.')
+            ->assertSee('KOPERASI KONSUMEN')
+            ->assertSee('Cinde Barokah Sejahtera')
             ->assertDontSee('Set up the first account')
             ->assertDontSee('Create Account');
 

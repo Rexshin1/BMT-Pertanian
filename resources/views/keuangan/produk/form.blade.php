@@ -24,7 +24,7 @@
             <select class="form-select" id="pemilik_kode" name="pemilik_kode" required>
               <option value="">Pilih pemilik</option>
               @foreach ($pemiliks as $pemilik)
-                <option value="{{ $pemilik->kode }}" @selected(old('pemilik_kode', $produk?->pemilik?->kode) === $pemilik->kode)>{{ $pemilik->id_tampilan }} — {{ $pemilik->nama }}</option>
+                <option value="{{ $pemilik->kode }}" @selected(old('pemilik_kode', $produk?->pemilik?->kode ?? $lastPemilikKode) === $pemilik->kode)>{{ $pemilik->id_tampilan }} — {{ $pemilik->nama }}</option>
               @endforeach
             </select>
             @error('pemilik_kode')<div class="text-danger fs-3 mt-1">{{ $message }}</div>@enderror

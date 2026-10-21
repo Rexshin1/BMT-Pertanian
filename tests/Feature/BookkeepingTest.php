@@ -318,7 +318,7 @@ class BookkeepingTest extends TestCase
             ->assertSee('Barang Dashboard')
             ->assertSee('Rp 700')
             ->assertSee('Rp 200')
-            ->assertSee('BMT Cinde Barokah © '.now()->year.' All Right Reserved.')
+            ->assertSee('Koperasi Konsumen Cinde Barokah Sejahtera © '.now()->year.' All Right Reserved.')
             ->assertDontSee('Ringkasan Stok Barang')
             ->assertDontSee('AdminMart.com')
             ->assertDontSee('ThemeWagon')
@@ -362,7 +362,7 @@ class BookkeepingTest extends TestCase
                 ->assertSee('ti-user', false)
                 ->assertSee('app-fixed-footer', false)
                 ->assertSee('>Logout</span>', false)
-                ->assertSee('BMT Cinde Barokah © '.now()->year.' All Right Reserved.')
+                ->assertSee('Koperasi Konsumen Cinde Barokah Sejahtera © '.now()->year.' All Right Reserved.')
                 ->assertDontSee('>Login</span>', false);
         }
 
@@ -692,7 +692,7 @@ class BookkeepingTest extends TestCase
     {
         $this->get(route('account.edit'))
             ->assertOk()
-            ->assertSee('BMT Cinde Barokah logo')
+            ->assertSee('Logo Koperasi Konsumen Cinde Barokah Sejahtera')
             ->assertSee('Edit Account');
 
         $this->put(route('account.update'), [
@@ -864,6 +864,42 @@ class BookkeepingTest extends TestCase
 
         $this->post(route('pemilik.store'), ['nama' => 'Pemilik pengganti'])
             ->assertSessionHas('success', 'Nama berhasil disimpan dengan ID 001.');
+    }
+
+    public function test_last_owner_id_stays_prefilled_after_saving_a_transaction(): void
+    {
+        $pemilik = $this->createPemilik('Budi');
+        $kode = $pemilik->kode;
+
+        // Habls mencatat pembelian, form create tampil lagi — ID harus sudah terisi.
+        $this->post(route('pembelian.store'), [
+            'pemilik_kode' => $kode,
+            'nama_barang' => 'Gula',
+            'tanggal' => '2026-10-20',
+            'satuan' => 'per kg',
+            'jumlah' => '5',
+            'harga_beli' => '15000',
+        ])->assertRedirect(route('pembelian.create'));
+
+        $this->get(route('pembelian.create'))
+            ->assertSee('name="pemilik_kode" value="'.$kode.'"', false);
+        $this->get(route('penjualan.create'))
+            ->assertSee('name="pemilik_kode" value="'.$kode.'"', false);
+
+        // ID terakhir juga menempel di form Tambah Barang (selected di dropdown).
+        $this->post(route('produk.store'), [
+            'pemilik_kode' => $kode,
+            'nama' => 'Teh Pucuk',
+            'satuan' => 'botol',
+        ])->assertRedirect(route('produk.index'));
+
+        $this->get(route('produk.create'))
+            ->assertSee('value="'.$kode.'" selected', false);
+
+        // ID pemilik yang sudah dihapus tidak boleh ikut terisi.
+        $this->delete(route('pemilik.destroy', $pemilik))->assertRedirect(route('pemilik.index'));
+        $this->get(route('pembelian.create'))
+            ->assertDontSee('name="pemilik_kode" value="'.$kode.'"', false);
     }
 
     private function createPemilik(string $nama): Pemilik

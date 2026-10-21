@@ -95,7 +95,7 @@
       columnDefs: [{ targets: @json($nonOrderableColumns), orderable: false, searchable: false }],
       layout: {
         topStart: @json($withExports) ? {
-          buttons: [
+          buttons: window['customButtons_{{ $tableId }}'] || [
             { extend: 'csvHtml5', text: 'CSV', title: tableTitle, exportOptions: { columns: ':visible', modifier: { search: 'applied' } } },
             { extend: 'excelHtml5', text: 'Excel', title: tableTitle, exportOptions: { columns: ':visible', modifier: { search: 'applied' } } },
             { extend: 'pdfHtml5', text: 'PDF', title: tableTitle, orientation: 'landscape', pageSize: 'A4', exportOptions: { columns: ':visible', modifier: { search: 'applied' } } }

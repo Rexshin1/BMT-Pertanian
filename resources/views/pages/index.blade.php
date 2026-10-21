@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dashboard - BMT Cinde Barokah</title>
+  <title>Dashboard - Koperasi Konsumen Cinde Barokah Sejahtera</title>
   <link rel="shortcut icon" type="image/png" href="{{ asset('assets/images/logos/bmt-cinde-barokah.png') }}" />
   <link rel="stylesheet" href="{{ asset('assets/css/styles.min.css') }}" />
   <link rel="stylesheet" href="{{ asset('assets/css/bmt-theme.css') }}" />
@@ -20,8 +20,8 @@
       <div>
         <div class="brand-logo d-flex align-items-center justify-content-between">
           <div class="bmt-brand text-nowrap">
-            <img src="{{ asset('assets/images/logos/bmt-cinde-barokah.png') }}" alt="Logo BMT Cinde Barokah" />
-            <span class="bmt-brand-name"><strong>BMT CINDE BAROKAH</strong><small>Koperasi Konsumen Cinde Barokah Sejahtera</small></span>
+            <img src="{{ asset('assets/images/logos/bmt-cinde-barokah.png') }}" alt="Logo Koperasi Konsumen Cinde Barokah Sejahtera" />
+            <span class="bmt-brand-name"><strong>KOPERASI KONSUMEN</strong><small>Cinde Barokah Sejahtera</small></span>
           </div>
           <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
             <i class="ti ti-x fs-8"></i>
@@ -62,6 +62,12 @@
               <a class="sidebar-link" href="{{ route('laporan.laba-rugi') }}">
                 <span><i class="ti ti-report-money"></i></span>
                 <span class="hide-menu">Laba Rugi (HB & HJ)</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="{{ route('laporan.stok-akhir') }}">
+                <span><i class="ti ti-packages"></i></span>
+                <span class="hide-menu">Stok Akhir</span>
               </a>
             </li>
             <li class="nav-small-cap">
@@ -126,7 +132,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <span class="nav-link">BMT Cinde Barokah</span>
+              <span class="nav-link">Koperasi Konsumen Cinde Barokah Sejahtera</span>
             </li>
             <li class="nav-item">
               <a class="nav-link nav-icon-hover" href="javascript:void(0)">

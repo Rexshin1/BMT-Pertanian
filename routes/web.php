@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LaporanLabaRugiController;
+use App\Http\Controllers\LaporanStokAkhirController;
 use App\Http\Controllers\PembelianController;
 use App\Http\Controllers\PemilikController;
 use App\Http\Controllers\PenjualanController;
@@ -40,4 +41,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/penjualan/master-data', [PenjualanController::class, 'index'])->name('penjualan.master-data');
     Route::post('/penjualan', [PenjualanController::class, 'store'])->name('penjualan.store');
     Route::get('/laporan/laba-rugi', [LaporanLabaRugiController::class, 'index'])->name('laporan.laba-rugi');
+    Route::get('/laporan/stok-akhir', [LaporanStokAkhirController::class, 'index'])->name('laporan.stok-akhir');
 });

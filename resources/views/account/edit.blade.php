@@ -9,7 +9,7 @@
     <div class="card">
       <div class="card-body">
         <div class="d-flex align-items-center gap-3 mb-4">
-          <img src="{{ asset('assets/images/logos/bmt-cinde-barokah.png') }}" alt="BMT Cinde Barokah logo" width="56" height="56">
+          <img src="{{ asset('assets/images/logos/bmt-cinde-barokah.png') }}" alt="Logo Koperasi Konsumen Cinde Barokah Sejahtera" width="56" height="56">
           <div>
             <h5 class="card-title fw-semibold mb-1">Account Details</h5>
             <p class="text-muted mb-0">Update your profile and password.</p>

@@ -16,9 +16,14 @@
             <input class="form-control" id="nama" name="nama" value="{{ old('nama') }}" maxlength="150" required>
             @error('nama')<div class="text-danger fs-3 mt-1">{{ $message }}</div>@enderror
           </div>
+          <div class="mb-3">
+            <label class="form-label" for="alamat">Alamat / Desa</label>
+            <textarea class="form-control" id="alamat" name="alamat" rows="2" maxlength="255" placeholder="Contoh: Dsn. Dawung Kec. Grabagan Kab. Tuban">{{ old('alamat') }}</textarea>
+            @error('alamat')<div class="text-danger fs-3 mt-1">{{ $message }}</div>@enderror
+          </div>
           <button class="btn btn-primary w-100" type="submit">Simpan Nama</button>
         </form>
-        <p class="text-muted fs-3 mt-3 mb-0">Masukkan Nama pemilik ID dibuat otomatis.</p>
+        <p class="text-muted fs-3 mt-3 mb-0">Masukkan Nama dan Alamat pemilik. ID dibuat otomatis.</p>
       </div>
     </div>
   </div>
@@ -29,13 +34,14 @@
         <div class="table-responsive">
           <table id="pemilik-table" class="table table-hover align-middle text-nowrap mb-0">
             <thead>
-              <tr><th>ID</th><th>Nama</th><th class="text-end">Jenis Barang</th><th class="text-end">Aksi</th></tr>
+              <tr><th>ID</th><th>Nama</th><th>Alamat / Desa</th><th class="text-end">Jenis Barang</th><th class="text-end">Aksi</th></tr>
             </thead>
             <tbody>
               @foreach ($pemiliks as $pemilik)
                 <tr>
                   <td class="fw-semibold">{{ $pemilik->id_tampilan }}</td>
                   <td>{{ $pemilik->nama }}</td>
+                  <td class="text-muted">{{ $pemilik->alamat ?? '-' }}</td>
                   <td class="text-end">{{ $pemilik->produks_count }}</td>
                   <td class="text-end">
                     <div class="d-inline-flex gap-1">
